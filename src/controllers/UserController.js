@@ -1,4 +1,12 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const generateToken = (user) => {
+  return jwt.sign(
+    { id: user._id, email:user.email, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: '30d' }
+  );
+}
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -23,7 +31,14 @@ exports.createUser = async (req, res) => {
   try {
     const newUser = new User(req.body);
     await newUser.save();
-    res.status(201).json(newUser);
+
+    // Générer le token
+    const token = generateToken(newUser);
+
+    res.status(201).json({
+      user: newUser,
+      token
+    });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
