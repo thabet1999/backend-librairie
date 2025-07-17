@@ -8,4 +8,5 @@ const fournisseurSchema = new mongoose.Schema({
   contactPrincipal: { type: String, required: true }
 });
 
+
 module.exports = mongoose.model('Fournisseur', fournisseurSchema);
